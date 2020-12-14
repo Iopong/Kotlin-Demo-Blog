@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password:
+    url: jdbc:postgresql://localhost:26257/defaultdb?sslmode=disable
+
+#  flyway:
+#    baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      naming_strategy: org.hibernate.cfg.EJB3NamingStrategy
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    generate-ddl: true
+    show-sql: true
