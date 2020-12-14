@@ -1,8 +1,9 @@
 package com.blog.roach
 
+import com.blog.roach.entities.Post.Blog
 import com.blog.roach.entities.Users
-import com.blog.roach.respositories.BlogRepository
-//import com.blog.roach.respositories.PostsRepository
+//import com.blog.roach.respositories.BlogRepository
+import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
@@ -19,7 +20,7 @@ class RepositoryTest
 	lateinit var userRepository: UsersRepository
 
 	@Autowired
-	lateinit var postsRepository: BlogRepository
+	lateinit var postsRepository: PostsRepository
 
 	var testUser: Users? = null
 

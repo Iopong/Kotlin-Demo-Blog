@@ -5,7 +5,8 @@ import com.blog.roach.Exceptions.StorageError
 import com.blog.roach.entities.Post.Blog
 import com.blog.roach.entities.Post.Post
 import com.blog.roach.entities.Users
-import com.blog.roach.respositories.BlogRepository
+//import com.blog.roach.respositories.BlogRepository
+import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.MediaType
@@ -21,13 +22,12 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api")
 class PostsController(
-    val _postsRepo: BlogRepository,
+    val _postsRepo: PostsRepository,
     val _userRepo: UsersRepository,
 )
 {
-    private val postsRepository: BlogRepository = _postsRepo
+    private val postsRepository: PostsRepository = _postsRepo
     private val usersRepository: UsersRepository = _userRepo
-
 
     @PostMapping("/users/{id}/posts")
     fun createPost(
@@ -54,7 +54,7 @@ class PostsController(
         @PathVariable id: Long,
         request: HttpServletRequest,
         @RequestParam("date") date: String,
-    ) : ResponseEntity<Blog> {
+    ) : ResponseEntity<Post> {
         return usersRepository.findById(id).map { user ->
             val nDate: LocalDateTime = LocalDateTime.parse(date)
             var nPost = postsRepository.findByCreatedAtAndAuthor(nDate, user)
@@ -66,7 +66,7 @@ class PostsController(
     @GetMapping("/users/{id}/posts")
     fun getAllPostsByUserId(
         @PathVariable id: Long,
-    ): ResponseEntity<Blog>? {
+    ): ResponseEntity<Post>? {
         return usersRepository.findById(id).map { user ->
             return@map ResponseEntity.ok(postsRepository.findByAuthor(user))
         }.orElseThrow { NotFound }
@@ -78,8 +78,8 @@ class PostsController(
         @PathVariable userId: Long,
         @PathVariable postId: Long,
         @Valid @RequestBody upPost: Blog,
-    ): Blog {
-        var exPost: Blog? = postsRepository.findByIdOrNull(postId)
+    ): Post {
+        var exPost: Blog? = postsRepository.findByIdOrNull(postId) as Blog
         var user: Users? = usersRepository.findByIdOrNull(userId)
 
         if (exPost == null || user == null) throw NotFound
@@ -97,7 +97,7 @@ class PostsController(
         @PathVariable (value = "userId") userId: Long,
         @PathVariable (value = "postId") postId: Long,
     ): ResponseEntity<String> {
-        var exPost: Blog? = postsRepository.findByIdOrNull(postId)
+        var exPost: Post? = postsRepository.findByIdOrNull(postId)
         var user: Users? = usersRepository.findByIdOrNull(userId)
 
         if (exPost == null || user == null) throw NotFound
@@ -105,5 +105,4 @@ class PostsController(
         postsRepository.delete(exPost)
         return ResponseEntity.ok().build<String>()
     }
-
 }

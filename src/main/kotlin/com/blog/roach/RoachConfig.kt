@@ -1,10 +1,8 @@
 package com.blog.roach
 
 import com.blog.roach.entities.Post.Blog
-//import com.blog.roach.entities.Post.Posts
 import com.blog.roach.entities.Users
-import com.blog.roach.respositories.BlogRepository
-//import com.blog.roach.respositories.PostsRepository
+import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
@@ -16,7 +14,7 @@ class RoachConfig {
     @Bean
     fun databaseInit(
         usersRepository: UsersRepository,
-        postsRepository: BlogRepository
+        postsRepository: PostsRepository
     ) = ApplicationRunner {
 
         // create a user

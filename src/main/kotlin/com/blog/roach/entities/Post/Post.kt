@@ -1,6 +1,5 @@
 package com.blog.roach.entities.Post
 
-import com.blog.roach.Extension.localDateFormatter
 import com.blog.roach.entities.Users
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.OnDelete
@@ -8,11 +7,12 @@ import org.hibernate.annotations.OnDeleteAction
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@MappedSuperclass
-open abstract class Post {
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+open class Post() {
     @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     open var id: Long? = null
     @Basic
     @Column(name = "createdAt", nullable = false, updatable = false)
@@ -21,5 +21,5 @@ open abstract class Post {
     @JoinColumn(name = "author", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    var author: Users? = null
+    open var author: Users? = null
 }
