@@ -1,11 +1,9 @@
 package com.blog.roach.controllers
 
-import com.blog.roach.Exceptions.NotFound
-import com.blog.roach.Exceptions.StorageError
-import com.blog.roach.entities.Post.Blog
-import com.blog.roach.entities.Post.Post
+import com.blog.roach.exceptions.NotFound
+import com.blog.roach.entities.post.Blog
+import com.blog.roach.entities.post.Post
 import com.blog.roach.entities.Users
-//import com.blog.roach.respositories.BlogRepository
 import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -66,9 +64,9 @@ class PostsController(
     @GetMapping("/users/{id}/posts")
     fun getAllPostsByUserId(
         @PathVariable id: Long,
-    ): ResponseEntity<Post>? {
+    ): ResponseEntity<List<Post>>? {
         return usersRepository.findById(id).map { user ->
-            return@map ResponseEntity.ok(postsRepository.findByAuthor(user))
+            return@map ResponseEntity.ok(postsRepository.findAllByAuthor(user))
         }.orElseThrow { NotFound }
     }
 

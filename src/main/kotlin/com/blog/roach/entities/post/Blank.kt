@@ -1,4 +1,4 @@
-package com.blog.roach.entities.Post
+package com.blog.roach.entities.post
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -8,5 +8,5 @@ import javax.persistence.Table
 @Table(name = "blank")
 class Blank(
     @Column(name = "title")
-    var title: String? = null
+    override var title: String? = null
 ) : Post()

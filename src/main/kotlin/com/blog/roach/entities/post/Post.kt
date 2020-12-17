@@ -1,4 +1,4 @@
-package com.blog.roach.entities.Post
+package com.blog.roach.entities.post
 
 import com.blog.roach.entities.Users
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -14,6 +14,8 @@ open class Post() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     open var id: Long? = null
+    @Column(name = "title")
+    open var title: String? = null
     @Basic
     @Column(name = "createdAt", nullable = false, updatable = false)
     open var createdAt: LocalDateTime = LocalDateTime.now()

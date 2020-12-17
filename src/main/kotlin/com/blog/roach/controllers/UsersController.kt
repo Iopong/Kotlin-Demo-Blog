@@ -1,8 +1,8 @@
 package com.blog.roach.controllers
 
-import com.blog.roach.Exceptions.BadRequest
-import com.blog.roach.Exceptions.NotFound
-import com.blog.roach.Exceptions.StorageError
+import com.blog.roach.exceptions.BadRequest
+import com.blog.roach.exceptions.NotFound
+import com.blog.roach.exceptions.StorageError
 import com.blog.roach.entities.Users
 import com.blog.roach.respositories.UsersRepository
 import org.springframework.http.MediaType
