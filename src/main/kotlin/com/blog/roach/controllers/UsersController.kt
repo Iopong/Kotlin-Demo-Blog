@@ -5,6 +5,7 @@ import com.blog.roach.exceptions.NotFound
 import com.blog.roach.exceptions.StorageError
 import com.blog.roach.entities.Users
 import com.blog.roach.respositories.UsersRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -24,12 +25,13 @@ class UsersController(
 
     @GetMapping("/users")
     fun findAll(
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        pageable: Pageable
     ): ResponseEntity<MutableIterable<Users>> {
         var allUsers: MutableIterable<Users>
 
         try {
-            allUsers = usersRepository.findAll()
+            allUsers = usersRepository.findAll(pageable)
         } catch (e: Exception) {
             throw NotFound
         }
@@ -39,7 +41,8 @@ class UsersController(
 
     @GetMapping("/users/{id}")
     fun findById(
-        @PathVariable id : Long
+        @PathVariable id : Long,
+        pageable: Pageable
     ): ResponseEntity<Optional<Users>> {
         var oneUser: Optional<Users>
         try {
@@ -58,7 +61,7 @@ class UsersController(
     )
     fun findByEmail(
         request: HttpServletRequest,
-        @RequestParam("email") email: String
+        @RequestParam("email") email: String,
     ): ResponseEntity<Users> {
         val oneUser: Users
 

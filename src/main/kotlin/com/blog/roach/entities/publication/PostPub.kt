@@ -10,7 +10,7 @@ class PostPub {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    val id: Long? = null
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post", nullable = false)
     @JsonIgnore

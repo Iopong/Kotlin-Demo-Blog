@@ -3,7 +3,6 @@ package com.blog.roach
 
 import com.blog.roach.entities.post.Blog
 import com.blog.roach.entities.Users
-//import com.blog.roach.respositories.BlogRepository
 import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.assertj.core.api.Assertions.assertThat

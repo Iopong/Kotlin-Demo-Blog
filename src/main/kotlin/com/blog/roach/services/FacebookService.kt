@@ -10,16 +10,18 @@ class FacebookService(
     private val credRepo: CredRepository
 ): Publisher {
 
+    override val type: String = "facebook"
+
     override fun verifyCred(user: Users?): Boolean {
         if (user != null) {
 
             // To account for multiple cred entries
             // maybe change to findByAuthorAndPublication
-            var foundUser = credRepo.findByAuthorAndPublication(user, "facebook")
+            var foundUser = credRepo.findByAuthorAndPublication(user, type)
             var publication = foundUser.publication
 
             if (publication != null) {
-                return publication.toLowerCase() == "facebook"
+                return publication.toLowerCase() == type
             }
         }
         return false

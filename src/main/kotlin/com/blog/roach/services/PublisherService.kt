@@ -7,54 +7,40 @@ import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.PubRepository
 import org.springframework.stereotype.Service
 
+
 @Service
 class PublisherService(
     private val postPubRepo: PostPubRepository,
     private val pubRepo: PubRepository,
     private val postRepo: PostsRepository,
-    private val twitterService: TwitterService,
-    private val localService: LocalService,
-    private val facebookService: FacebookService
+    private val services: List<Publisher>
 ) {
-
-    fun findPublisher(postPub: PostPub) {
-        var type = postPub.pubType?.toLowerCase()
-
-        if (type != null) {
-            return when (type) {
-                "twitter" -> twitterService.publishPost(postPub.post)
-                "facebook" -> facebookService.publishPost(postPub.post)
-                "local" -> localService.publishPost(postPub.post)
-                else -> throw NotFound
-            }
-        }
-        return throw NotFound
-    }
-
-    fun publishPost(postPub: PostPub, id: Long) {
-        var type = postPub.pubType
-        var post = postRepo.findById(id)
+    fun publishPost(postPub: PostPub, id: Long): PostPub? {
 
         try {
-            // check if not null and post to publisher
-            if (type != null && post != null) {
-                var pub = pubRepo.findByPubType(type.toLowerCase())
-                return (postRepo.findById(id).map {post ->
-                    // tie a post to a pub
-                    postPub.post = post
+            // Get the type from the postPub object
+            var type = postPub.pubType
 
-                    // tie a publisher to a post
+            // check if post id matches any post in db.
+            return postRepo.findById(id).map { post ->
+                if (type != null) {
+                    var pub = pubRepo.findByPubType(type.toLowerCase())
+                    postPub.post = post
                     postPub.pub = pub
 
-                    // save it to postPub table
-                    postPubRepo.save(postPub)
+                    // find services that matches our type.
+                    services.filter { sv ->
+                        sv.type == type.toLowerCase()
+                    }.forEach { s ->
+                        if (post != null) {
+                            s.publishPost(post)
+                        }
+                    }
+                }
 
-                    // find publisher
-                    return@map findPublisher(postPub)
-                }.orElseThrow { NotFound })
-            } else {
-                throw NotFound
-            }
+                // we're done so save postPub to repo.
+                postPubRepo.save(postPub)
+            }.orElseThrow { NotFound }
         } catch(e: Exception) {
             throw e
         }

@@ -15,7 +15,7 @@ class UserCredential(
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    val id: Long? = null
     @Column(name = "pub_type")
     var publication: String? = null
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

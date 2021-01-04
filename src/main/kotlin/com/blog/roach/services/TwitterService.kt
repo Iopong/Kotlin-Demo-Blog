@@ -10,6 +10,8 @@ class TwitterService(
     private val credRepo: CredRepository
 ): Publisher  {
 
+    override val type: String = "twitter"
+
     override fun publishPost(post: Post?) {
         if (post != null) {
             var verified = post.author?.let {verifyCred(post.author)}
@@ -21,11 +23,11 @@ class TwitterService(
 
     override fun verifyCred(user: Users?): Boolean {
         if (user != null) {
-            var foundUser = credRepo.findByAuthorAndPublication(user, "twitter")
+            var foundUser = credRepo.findByAuthorAndPublication(user, type)
             var publication = foundUser.publication
 
             if (publication != null) {
-                return publication.toLowerCase() == "twitter"
+                return publication.toLowerCase() == type
             }
         }
         return false

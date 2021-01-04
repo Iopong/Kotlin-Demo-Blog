@@ -6,6 +6,7 @@ import com.blog.roach.entities.post.Post
 import com.blog.roach.entities.Users
 import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -55,7 +56,8 @@ class PostsController(
     ) : ResponseEntity<Post> {
         return usersRepository.findById(id).map { user ->
             val nDate: LocalDateTime = LocalDateTime.parse(date)
-            var nPost = postsRepository.findByCreatedAtAndAuthor(nDate, user)
+            var nPost = postsRepository.findByCreatedAtAndAuthor(
+                nDate, user)
             return@map ResponseEntity.ok(nPost)
         }.orElseThrow { NotFound }
     }
@@ -64,9 +66,12 @@ class PostsController(
     @GetMapping("/users/{id}/posts")
     fun getAllPostsByUserId(
         @PathVariable id: Long,
-    ): ResponseEntity<List<Post>>? {
+        pageable: Pageable
+    ): ResponseEntity<MutableList<Post>>? {
         return usersRepository.findById(id).map { user ->
-            return@map ResponseEntity.ok(postsRepository.findAllByAuthor(user))
+            return@map ResponseEntity.ok(
+                postsRepository.findAllByAuthor(user, pageable)
+            )
         }.orElseThrow { NotFound }
     }
 
