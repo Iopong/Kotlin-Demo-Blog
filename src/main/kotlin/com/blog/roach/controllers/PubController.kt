@@ -69,7 +69,7 @@ class PubController(
         return pubRepo.findById(id).map { nPub ->
             nPub.pubType = pub.pubType
             return@map pubRepo.save(nPub)
-        }.orElseThrow { StorageError }
+        }.orElseThrow { NotFound }
     }
 
     @DeleteMapping("/publication/{id}")
@@ -79,7 +79,7 @@ class PubController(
         return pubRepo.findById(id).map { dPub ->
             pubRepo.delete(dPub)
             return@map ResponseEntity.accepted().build<String>()
-        }.or { throw StorageError }
+        }.or { throw NotFound }
     }
 
 }

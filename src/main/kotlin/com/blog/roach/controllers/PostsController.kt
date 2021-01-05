@@ -11,6 +11,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -80,11 +81,12 @@ open class PostsController(
 
 
     @PutMapping("/users/{userId}/posts/{postId}")
+
     fun updatePost(
         @PathVariable userId: Long,
         @PathVariable postId: Long,
         @Valid @RequestBody upPost: Blog,
-    ): Post {
+    ): ResponseEntity.BodyBuilder {
         var exPost: Blog? = postsRepository.findByIdOrNull(postId) as Blog
         var user: Users? = usersRepository.findByIdOrNull(userId)
 
@@ -95,7 +97,8 @@ open class PostsController(
         exPost.headline = upPost.headline
         exPost.author = user
 
-        return postsRepository.save(exPost)
+        postsRepository.save(exPost)
+        return ResponseEntity.status(HttpStatus.CREATED)
     }
 
     @DeleteMapping("/users/{userId}/posts/{postId}")

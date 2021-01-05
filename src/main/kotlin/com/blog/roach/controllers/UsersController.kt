@@ -16,6 +16,7 @@ import javax.validation.Valid
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.http.HttpStatus
 
 
 @RestController
@@ -28,7 +29,6 @@ class UsersController(
 
     @GetMapping("/users")
     fun findAll(
-        request: HttpServletRequest,
         pageable: Pageable
     ): ResponseEntity<MutableIterable<Users>> {
         var allUsers: MutableIterable<Users>
@@ -43,8 +43,8 @@ class UsersController(
     }
 
     @GetMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun findById(
-        request: HttpServletRequest,
         @PathVariable id : Long,
         pageable: Pageable
     ): EntityModel<Optional<Users>> {
@@ -55,12 +55,14 @@ class UsersController(
             throw NotFound
         }
 
+        // Add links to refer to API actions
+        // Makes the REST HATEOAS compliant.
         return EntityModel.of(oneUser,
             linkTo(methodOn(UsersController::class.java)
-                .findById(request, id, pageable))
+                .findById(id, pageable))
                 .withSelfRel(),
             linkTo(methodOn(UsersController::class.java)
-                .findAll(request, pageable))
+                .findAll(pageable))
                 .withRel("users")
             )
     }
@@ -89,11 +91,12 @@ class UsersController(
     fun updateUsers(
         @PathVariable id: Long,
         @Valid @RequestBody user: Users
-    ): Users {
+    ): ResponseEntity<Users>? {
         return usersRepository.findById(id).map { upUser ->
             upUser.email = user.email
             upUser.name = user.name
-            return@map usersRepository.save(upUser)
+            return@map ResponseEntity.status(HttpStatus.CREATED)
+                .body(usersRepository.save(upUser))
         }.orElseThrow { StorageError }
     }
 
