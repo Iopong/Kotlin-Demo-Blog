@@ -8,6 +8,9 @@ import com.blog.roach.respositories.PostsRepository
 import com.blog.roach.respositories.UsersRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,10 +20,9 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
-
 @RestController
 @RequestMapping("/api")
-class PostsController(
+open class PostsController(
     val _postsRepo: PostsRepository,
     val _userRepo: UsersRepository,
 )
@@ -66,12 +68,13 @@ class PostsController(
     @GetMapping("/users/{id}/posts")
     fun getAllPostsByUserId(
         @PathVariable id: Long,
-        pageable: Pageable
-    ): ResponseEntity<MutableList<Post>>? {
+        pageable: Pageable,
+    ): Any {
         return usersRepository.findById(id).map { user ->
-            return@map ResponseEntity.ok(
-                postsRepository.findAllByAuthor(user, pageable)
-            )
+            return@map EntityModel.of(postsRepository.findAllByAuthor(user, pageable),
+                linkTo(methodOn(PostsController::class.java)
+                    .getAllPostsByUserId(id, pageable))
+                    .withSelfRel())
         }.orElseThrow { NotFound }
     }
 

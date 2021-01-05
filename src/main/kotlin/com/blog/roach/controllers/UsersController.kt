@@ -13,6 +13,9 @@ import java.net.URI
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 
 
 @RestController
@@ -41,16 +44,25 @@ class UsersController(
 
     @GetMapping("/users/{id}")
     fun findById(
+        request: HttpServletRequest,
         @PathVariable id : Long,
         pageable: Pageable
-    ): ResponseEntity<Optional<Users>> {
+    ): EntityModel<Optional<Users>> {
         var oneUser: Optional<Users>
         try {
             oneUser = usersRepository.findById(id)
         } catch (e: Exception) {
             throw NotFound
         }
-        return ResponseEntity.ok(oneUser)
+
+        return EntityModel.of(oneUser,
+            linkTo(methodOn(UsersController::class.java)
+                .findById(request, id, pageable))
+                .withSelfRel(),
+            linkTo(methodOn(UsersController::class.java)
+                .findAll(request, pageable))
+                .withRel("users")
+            )
     }
 
     @RequestMapping(

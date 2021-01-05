@@ -1,5 +1,6 @@
 package com.blog.roach.entities
 
+import org.springframework.hateoas.RepresentationModel
 import javax.persistence.*
 
 @Entity(name = "users")
@@ -12,4 +13,4 @@ class Users(
         var name: String,
         @Column(name = "email")
         var email: String
-)
+) : RepresentationModel<Users>()

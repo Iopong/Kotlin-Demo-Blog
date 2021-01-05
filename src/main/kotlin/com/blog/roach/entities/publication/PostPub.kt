@@ -2,11 +2,12 @@ package com.blog.roach.entities.publication
 
 import com.blog.roach.entities.post.Post
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.springframework.hateoas.RepresentationModel
 import javax.persistence.*
 
 @Entity(name = "post_pub")
 @Table(name = "post_pub")
-class PostPub {
+class PostPub: RepresentationModel<PostPub>() {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,12 +4,13 @@ import com.blog.roach.entities.Users
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.springframework.hateoas.RepresentationModel
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-open class Post() {
+open class Post() : RepresentationModel<Post>() {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
