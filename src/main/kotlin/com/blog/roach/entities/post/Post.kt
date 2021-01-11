@@ -14,7 +14,7 @@ open class Post() : RepresentationModel<Post>() {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    open var id: Long? = null
+    open val id: Long? = null
     @Column(name = "title")
     open var title: String? = null
     @Basic

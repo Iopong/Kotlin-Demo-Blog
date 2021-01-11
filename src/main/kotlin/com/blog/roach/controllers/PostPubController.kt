@@ -10,10 +10,7 @@ import javax.validation.Valid
 class PostPubController(
     val _pubService: PublisherService
 ) {
-
-
     private val pubService: PublisherService = _pubService
-
     @PostMapping("/posts/{id}/postpub")
     fun createPostPub(
         @PathVariable id: Long,
